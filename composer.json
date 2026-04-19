@@ -1,0 +1,8 @@
+{
+    "name": "beauty-store/backend",
+    "description": "API and Admin Panel for Beauty Accessories Store",
+    "type": "project",
+    "require": {
+        "php": ">=8.1"
+    }
+}
