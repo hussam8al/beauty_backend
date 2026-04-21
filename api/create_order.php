@@ -24,13 +24,15 @@ if (!isset($data['user_id']) || !isset($data['total_amount']) || !isset($data['i
 // استخراج البيانات وتخزينها في متغيرات سهلة الاستخدام
 $user_id = $data['user_id'];
 
-// تنظيف المبلغ بشكل صارم لضمان أنه رقم فقط (حذف أي حروف أو مسافات "ر.س")
-$raw_amount = $data['total_amount'];
-$total_amount = preg_replace('/[^0-9.]/', '', $raw_amount);
-$total_amount = trim($total_amount);
+// تنظيف المبلغ بشكل صارم جداً (V3)
+$raw_amount = isset($data['total_amount']) ? (string)$data['total_amount'] : '0';
+// استخراج الأرقام والنقطة فقط
+$total_amount_clean = preg_replace('/[^0-9.]/', '', $raw_amount);
+// تحويلها لـ Float ثم لـ String لضمان التوافق مع DECIMAL في PostgreSQL
+$total_amount = (string)floatval($total_amount_clean);
 
-// تسجيل البيانات للتشخيص (يمكن حذفه لاحقاً)
-file_put_contents(__DIR__ . '/order_debug.log', date('Y-m-d H:i:s') . " - Raw: $raw_amount, Cleaned: $total_amount\n", FILE_APPEND);
+// تسجيل للتأكد من وصول البيانات (Debug)
+file_put_contents(__DIR__ . '/order_debug.log', date('Y-m-d H:i:s') . " [V3] Raw: $raw_amount, Cleaned: $total_amount\n", FILE_APPEND);
 
 $currency = $data['currency'] ?? 'ر.س'; // استخدام "ريال سعودي" كعملة افتراضية إذا لم ترسل
 $shipping_address = $data['shipping_address'];
@@ -90,6 +92,6 @@ try {
     }
     
     http_response_code(500);
-    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+    echo json_encode(["status" => "error", "message" => "V3_ERR: " . $e->getMessage()]);
 }
 ?>
