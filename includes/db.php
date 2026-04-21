@@ -1,4 +1,8 @@
 <?php
+// إخفاء التحذيرات الخاصة بالدوال الملغاة (Deprecated) لتجنب تعطل التحويلات في Vercel
+error_reporting(E_ALL & ~E_DEPRECATED);
+ini_set('display_errors', 0); // في الإنتاج يفضل إخفاء الأخطاء المباشرة
+
 // جلب بيانات الاتصال من متغيرات البيئة (Environment Variables) لضمان الأمان في السيرفرات السحابية
 // سيتم ضبط هذه القيم في لوحة تحكم Vercel لاحقاً
 $db_url = getenv('SUPABASE_DB_URL');

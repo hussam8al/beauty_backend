@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             $response = curl_exec($ch);
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            // curl_close() deprecated in PHP 8.5+ as resources are auto-freed
             
             if ($http_code == 200 || $http_code == 201) {
                 // حفظ المسار كـ رابط عام ليتمكن التطبيق من قراءته
