@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title ?? 'لوحة التحكم'; ?> - منتجات تجميل</title>
-    <!-- أيقونة الموقع (Favicon) -->
-    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- أيقونة الموقع (Favicon) - تم إضافة إصدار لتجاوز الكاش -->
+    <link rel="icon" type="image/png" href="favicon.png?v=1.1">
+    <link rel="shortcut icon" type="image/png" href="favicon.png?v=1.1">
     
     <!-- الربط مع ملف التنسيق الأساسي -->
     <link rel="stylesheet" href="css/style.css">
