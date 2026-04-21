@@ -34,8 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $supabase_key = getenv('SUPABASE_KEY');
         
         if ($supabase_url && $supabase_key) {
+            // تنظيف الرابط في حال قام المستخدم بنسخ رابط الـ REST API بالخطأ
+            $supabase_url = str_replace('/rest/v1', '', rtrim($supabase_url, '/'));
             $bucket_name = 'products'; // استخدام نفس الدلو أو إنشاء واحد جديد، سنستخدم 'products' للتخزين العام
-            $upload_url = rtrim($supabase_url, '/') . "/storage/v1/object/$bucket_name/categories/$file_name";
+            $upload_url = $supabase_url . "/storage/v1/object/$bucket_name/categories/$file_name";
             
             $file_content = file_get_contents($_FILES["image"]["tmp_name"]);
             $mime_type = mime_content_type($_FILES["image"]["tmp_name"]);
@@ -144,7 +146,14 @@ include __DIR__ . '/includes/header.php';
                 <td>
                     <!-- التحقق إذا كان القسم يحتوي على صورة لعرضها -->
                     <?php if($cat['image']): ?>
-                        <img src="../<?php echo $cat['image']; ?>" width="50" style="border-radius:5px">
+                        <?php 
+                        $img_src = $cat['image'];
+                        // إذا كان الرابط يبدأ بـ http، نعرضه كما هو، وإلا نضيف المسار المحلي
+                        if (strpos($img_src, 'http') === false) {
+                            $img_src = "../" . $img_src;
+                        }
+                        ?>
+                        <img src="<?php echo $img_src; ?>" width="50" style="border-radius:5px">
                     <?php else: ?>
                         - <!-- عرض خط إذا لم توجد صورة -->
                     <?php endif; ?>
