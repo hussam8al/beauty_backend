@@ -1,5 +1,5 @@
 <div class="sidebar">
-    <h2>متجر الجمال</h2>
+    <h2>منتجات تجميل 💄</h2>
     <nav>
         <ul>
             <li><a href="index.php" class="<?php echo $active_page == 'index' ? 'active' : ''; ?>">الرئيسية</a></li>
