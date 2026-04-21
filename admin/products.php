@@ -55,11 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             $response = curl_exec($ch);
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            // curl_close() is no longer needed in PHP 8.5+
+            $curl_error = curl_error($ch);
             
             if ($http_code == 200 || $http_code == 201) {
                 // حفظ المسار كـ رابط عام ليتمكن التطبيق من قراءته
                 $image_path = rtrim($supabase_url, '/') . "/storage/v1/object/public/$bucket_name/$file_name";
+            } else {
+                // عرض الخطأ المتسبب بالفشل
+                echo "<div style='color:red; background:#fee; padding:10px; border:1px solid red; margin:10px;'>";
+                echo "<h3>خطأ في رفع صورة المنتج إلى Supabase:</h3>";
+                echo "HTTP Code: " . $http_code . "<br>";
+                echo "Error Response: " . htmlspecialchars($response) . "<br>";
+                echo "CURL Error: " . $curl_error . "<br>";
+                echo "</div>";
+                die("تم إيقاف العملية لإصلاح الخطأ.");
             }
         } else {
             // للتطوير المحلي في حالة عدم إعداد Supabase
