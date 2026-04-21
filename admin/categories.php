@@ -26,9 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // التعامل مع رفع الصور (Image Upload Handling) باستخدام Supabase Storage
     $image_path = isset($_POST['existing_image']) ? $_POST['existing_image'] : ''; // الاحتفاظ بالصورة القديمة افتراضياً
-    // نتحقق إذا تم اختيار ملف جديد ولا يوجد أخطاء في الرفع
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $file_name = time() . '_' . basename($_FILES["image"]["name"]); // إنشاء اسم فريد للملف باستخدام الوقت الحالي
+        // إنشاء اسم فريد للملف يعتمد على الوقت فقط لتجنب مشاكل الحروف العربية في الروابط
+        $ext = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+        $file_name = time() . '.' . $ext; 
         
         $supabase_url = getenv('SUPABASE_URL');
         $supabase_key = getenv('SUPABASE_KEY');
