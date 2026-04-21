@@ -18,12 +18,12 @@ if (!$user_id) {
 
 try {
     if ($notification_id) {
-        // تحديث إشعار واحد فقط كمقروء (is_read = 1)
-        $stmt = $pdo->prepare("UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?");
+        // تحديث إشعار واحد فقط كمقروء (TRUE لـ PostgreSQL)
+        $stmt = $pdo->prepare("UPDATE notifications SET is_read = TRUE WHERE id = ? AND user_id = ?");
         $stmt->execute([$notification_id, $user_id]);
     } else {
-        // تحديث كافة إشعارات المستخدم لتصبح مقروءة في حال عدم تحديد إشعار معين
-        $stmt = $pdo->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ?");
+        // تحديث كافة إشعارات المستخدم (TRUE لـ PostgreSQL)
+        $stmt = $pdo->prepare("UPDATE notifications SET is_read = TRUE WHERE user_id = ?");
         $stmt->execute([$user_id]);
     }
 
