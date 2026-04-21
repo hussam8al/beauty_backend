@@ -8,8 +8,8 @@ if ($db_url) {
     $parsed_url = parse_url($db_url);
     $host = $parsed_url['host'];
     $port = isset($parsed_url['port']) ? $parsed_url['port'] : 5432;
-    $user = $parsed_url['user'];
-    $pass = $parsed_url['pass'];
+    $user = urldecode($parsed_url['user']);
+    $pass = urldecode($parsed_url['pass']);
     $db   = ltrim($parsed_url['path'], '/');
     
     // تعريف الـ DSN الخاص بـ PostgreSQL
