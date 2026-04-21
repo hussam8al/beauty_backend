@@ -1,6 +1,6 @@
 <?php
 // تضمين ملف قاعدة البيانات للاتصال بالسيرفر
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // ضبط عنوان الصفحة واسمها البرمجي
 $page_title = 'إدارة الأقسام';
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $categories = $pdo->query("SELECT * FROM categories ORDER BY id DESC")->fetchAll();
 
 // استدعاء ملف الهيدر العلوي
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- هيدر الصفحة مع زر لفتح نموذج الإضافة -->
@@ -177,4 +177,4 @@ function hideForm() {
 }
 </script>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

@@ -5,7 +5,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 // تضمين ملف الاتصال بقاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // معالجة طلبات OPTIONS الخاصة بمتصفحات الويب (Preflight requests)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

@@ -2,7 +2,7 @@
 // تحديد نوع الملف كـ JSON
 header('Content-Type: application/json');
 // استدعاء ملف الاتصال بقاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // الحصول على رقم المستخدم من الرابط (GET Parameter)
 $user_id = $_GET['user_id'] ?? null;

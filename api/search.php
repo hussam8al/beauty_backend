@@ -6,7 +6,7 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header('Content-Type: application/json');
 
 // تضمين ملف الاتصال بقاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // جلب كلمة البحث (q) ومعرف المستخدم (user_id) من الرابط
 $query = isset($_GET['q']) ? $_GET['q'] : '';

@@ -2,7 +2,7 @@
 // تحديد نوع المحتوى كـ JSON ليعرف التطبيق كيفية التعامل مع النتيجة
 header('Content-Type: application/json');
 // تضمين ملف قاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // استقبال البيانات الخام (Raw Data) القادمة من جسد الطلب (Request Body) وتحويلها من JSON لمصفوفة PHP
 $data = json_decode(file_get_contents("php://input"), true);

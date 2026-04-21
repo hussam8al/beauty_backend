@@ -6,7 +6,7 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // استدعاء ملف الاتصال بقاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // ضبط إعدادات تقارير الأخطاء
 error_reporting(E_ALL);

@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 // تضمين ملف قاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // جلب رقم المنتج من الرابط
 $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : null;

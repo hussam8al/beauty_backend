@@ -2,7 +2,7 @@
 // إرسال البيانات بصيغة JSON والسماح لكافة التطبيقات بالوصول
 header('Content-Type: application/json');
 // الرجوع مجلدين للخلف للوصول لملف قاعدة البيانات
-require_once '../../includes/db.php';
+require_once __DIR__ . '/../../includes/db.php';
 
 // استقبال بيانات الـ JSON المرسلة (البريد وكلمة المرور)
 $data = json_decode(file_get_contents("php://input"), true);

@@ -1,6 +1,6 @@
 <?php
 // تضمين ملف قاعدة البيانات للاتصال
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // تعيين عنوان الصفحة وتحديد الصفحة النشطة للقائمة
 $page_title = 'إدارة المنتجات';
@@ -90,7 +90,7 @@ $products = $pdo->query("SELECT p.*, c.name as category_name FROM products p JOI
 // جلب قائمة الأقسام لاستخدامها في القائمة المنسدلة (Dropdown) بالنموذج
 $categories = $pdo->query("SELECT * FROM categories")->fetchAll();
 
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- هيدر الصفحة وزر الإضافة -->
@@ -237,4 +237,4 @@ function hideForm() {
 }
 </script>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

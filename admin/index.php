@@ -1,6 +1,6 @@
 <?php
 // تضمين ملف الاتصال بقاعدة البيانات لتمكين الوصول إلى الكائن $pdo المستخدم في الاستعلامات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // تعريف متغير لعنوان الصفحة الحالية
 $page_title = 'الرئيسية';
@@ -23,7 +23,7 @@ $order_count = $pdo->query("SELECT COUNT(*) FROM orders WHERE status = 'pending'
 $latest_products = $pdo->query("SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.id ORDER BY p.created_at DESC LIMIT 5")->fetchAll();
 
 // استدعاء ملف الهيدر (Header) الذي يحتوي على أكواد HTML العليا وقائمة التنقل
-include 'includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- هيدر الصفحة الرئيسي -->
@@ -88,4 +88,4 @@ include 'includes/header.php';
 </div>
 
 <!-- استدعاء ملف الفوتر (Footer) الذي يغلق وسوم HTML -->
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

@@ -2,7 +2,7 @@
 // تحديد نوع الاستجابة بصيغة JSON
 header('Content-Type: application/json');
 // استدعاء ملف الاتصال بقاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // جلب رقم المستخدم من رابط الـ API
 $user_id = $_GET['user_id'] ?? null;

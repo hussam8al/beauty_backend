@@ -2,7 +2,7 @@
 // تحديد نوع الملف كـ JSON
 header('Content-Type: application/json');
 // تضمين ملف قاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // جلب رقم المستخدم من الرابط
 $user_id = $_GET['user_id'] ?? null;

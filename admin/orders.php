@@ -1,6 +1,6 @@
 <?php
 // تضمين ملف الاتصال بقاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">

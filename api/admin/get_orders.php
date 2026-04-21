@@ -2,7 +2,7 @@
 // تحديد نوع الملف كـ JSON ليعرف المتصفح كيفية قراءته
 header('Content-Type: application/json');
 // استدعاء ملف الاتصال بقاعدة البيانات
-require_once '../../includes/db.php';
+require_once __DIR__ . '/../../includes/db.php';
 
 try {
     // 1. جلب كافة الطلبات من قاعدة البيانات مع دمج معلومات المستخدم (الاسم والبريد)

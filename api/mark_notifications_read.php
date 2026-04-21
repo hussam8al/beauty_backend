@@ -2,7 +2,7 @@
 // تحديد نوع الاستجابة JSON
 header('Content-Type: application/json');
 // تضمين ملف الاتصال بقاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // استقبال بيانات الـ JSON (معرف المستخدم ورقم الإشعار) عبر POST
 $data = json_decode(file_get_contents("php://input"), true);

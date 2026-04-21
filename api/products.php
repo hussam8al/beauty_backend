@@ -6,7 +6,7 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // تضمين ملف الاتصال بقاعدة البيانات
-require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // ضبط إعدادات تقارير الأخطاء (إخفاء الأخطاء المباشرة عن المستخدم النهائي وإظهارها للمطور فقط)
 error_reporting(E_ALL);

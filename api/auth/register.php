@@ -2,7 +2,7 @@
 // تحديد نوع الاستجابة كـ JSON
 header('Content-Type: application/json');
 // تضمين ملف قاعدة البيانات
-require_once '../../includes/db.php';
+require_once __DIR__ . '/../../includes/db.php';
 
 // جلب البيانات المرسلة من التطبيق
 $data = json_decode(file_get_contents("php://input"), true);
