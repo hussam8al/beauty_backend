@@ -28,14 +28,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $description = $_POST['description'];
     $is_featured = isset($_POST['is_featured']) ? 1 : 0; // التحقق من "منتج مميز"
     
-    // التعامل مع رفع صورة المنتج
+    // التعامل مع رفع صورة المنتج باستخدام Supabase Storage
     $image_path = isset($_POST['existing_image']) ? $_POST['existing_image'] : '';
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $target_dir = "../uploads/";
         $file_name = time() . '_' . basename($_FILES["image"]["name"]); // اسم فريد للصورة
-        $target_file = $target_dir . $file_name;
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            $image_path = 'uploads/' . $file_name; // حفظ مسار الصورة الجديد
+        
+        $supabase_url = getenv('SUPABASE_URL');
+        $supabase_key = getenv('SUPABASE_KEY');
+        
+        if ($supabase_url && $supabase_key) {
+            $bucket_name = 'products'; // اسم الدلو في Supabase Storage
+            $upload_url = rtrim($supabase_url, '/') . "/storage/v1/object/$bucket_name/$file_name";
+            
+            $file_content = file_get_contents($_FILES["image"]["tmp_name"]);
+            $mime_type = mime_content_type($_FILES["image"]["tmp_name"]);
+            
+            $ch = curl_init($upload_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $file_content);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "Authorization: Bearer $supabase_key",
+                "Content-Type: $mime_type",
+                "apikey: $supabase_key"
+            ]);
+            
+            $response = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            if ($http_code == 200 || $http_code == 201) {
+                // حفظ المسار كـ رابط عام ليتمكن التطبيق من قراءته
+                $image_path = rtrim($supabase_url, '/') . "/storage/v1/object/public/$bucket_name/$file_name";
+            }
+        } else {
+            // للتطوير المحلي في حالة عدم إعداد Supabase
+            $target_dir = "../uploads/";
+            $target_file = $target_dir . $file_name;
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                $image_path = 'uploads/' . $file_name; 
+            }
         }
     }
 
