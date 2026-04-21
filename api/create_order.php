@@ -23,7 +23,8 @@ if (!isset($data['user_id']) || !isset($data['total_amount']) || !isset($data['i
 
 // استخراج البيانات وتخزينها في متغيرات سهلة الاستخدام
 $user_id = $data['user_id'];
-$total_amount = $data['total_amount'];
+// تنظيف المبلغ من أي أحرف (مثل "ر.س") لضمان أنه رقم فقط قبل إدخاله في قاعدة البيانات
+$total_amount = preg_replace('/[^0-9.]/', '', $data['total_amount']);
 $currency = $data['currency'] ?? 'ر.س'; // استخدام "ريال سعودي" كعملة افتراضية إذا لم ترسل
 $shipping_address = $data['shipping_address'];
 $phone_number = $data['phone_number'];
@@ -58,7 +59,8 @@ try {
         if (!isset($item['product_id']) || !isset($item['quantity']) || !isset($item['price'])) {
             throw new Exception("Invalid item data.");
         }
-        $stmtItem->execute([$order_id, $item['product_id'], $item['quantity'], $item['price'], $item['currency'] ?? 'ر.س']);
+        $clean_price = preg_replace('/[^0-9.]/', '', $item['price']);
+        $stmtItem->execute([$order_id, $item['product_id'], $item['quantity'], $clean_price, $item['currency'] ?? 'ر.س']);
     }
 
     // تأكيد حفظ كافة العمليات في قاعدة البيانات
