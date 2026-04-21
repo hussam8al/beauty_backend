@@ -26,10 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // التعامل مع رفع الصور (Image Upload Handling) باستخدام Supabase Storage
     $image_path = isset($_POST['existing_image']) ? $_POST['existing_image'] : ''; // الاحتفاظ بالصورة القديمة افتراضياً
+    // نتحقق إذا تم اختيار ملف جديد ولا يوجد أخطاء في الرفع
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        // إنشاء اسم فريد للملف يعتمد على الوقت فقط لتجنب مشاكل الحروف العربية في الروابط
-        $ext = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
-        $file_name = time() . '.' . $ext; 
+        // إنشاء اسم فريد للملف وإزالة الأحرف غير الإنجليزية (العربية، الفراغات، إلخ)
+        $original_name = basename($_FILES["image"]["name"]);
+        $ext = pathinfo($original_name, PATHINFO_EXTENSION);
+        // استبدال كل ما ليس حرفاً إنجليزياً أو رقماً أو نقطة بشرطة سفلية
+        $safe_name = preg_replace('/[^a-zA-Z0-9_.-]/', '_', pathinfo($original_name, PATHINFO_FILENAME));
+        $file_name = time() . '_' . $safe_name . '.' . $ext;
         
         $supabase_url = getenv('SUPABASE_URL');
         $supabase_key = getenv('SUPABASE_KEY');

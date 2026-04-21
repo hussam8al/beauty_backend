@@ -28,11 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $description = $_POST['description'];
     $is_featured = isset($_POST['is_featured']) ? 1 : 0; // التحقق من "منتج مميز"
     
-    // التعامل مع رفع الصور لـ Supabase
+    // التعامل مع رفع صورة المنتج باستخدام Supabase Storage
     $image_path = isset($_POST['existing_image']) ? $_POST['existing_image'] : '';
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $ext = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
-        $file_name = time() . '.' . $ext; 
+        // إنشاء اسم فريد وإزالة الأحرف غير الإنجليزية (عربية وفراغات إلخ)
+        $original_name = basename($_FILES["image"]["name"]);
+        $ext = pathinfo($original_name, PATHINFO_EXTENSION);
+        $safe_name = preg_replace('/[^a-zA-Z0-9_.-]/', '_', pathinfo($original_name, PATHINFO_FILENAME));
+        $file_name = time() . '_' . $safe_name . '.' . $ext;
         
         $supabase_url = getenv('SUPABASE_URL');
         $supabase_key = getenv('SUPABASE_KEY');
