@@ -114,6 +114,45 @@ include __DIR__ . '/includes/header.php';
     <button onclick="showAddForm()" class="btn btn-primary">إضافة قسم جديد</button>
 </div>
 
+<!-- رسائل النجاح والخطأ (Toast Notifications) -->
+<?php if(isset($_GET['added'])): ?>
+<div id="toast" class="toast toast-success">✅ تم إضافة القسم بنجاح!</div>
+<?php elseif(isset($_GET['updated'])): ?>
+<div id="toast" class="toast toast-success">✅ تم تعديل القسم بنجاح!</div>
+<?php elseif(isset($_GET['deleted'])): ?>
+<div id="toast" class="toast toast-success">🗑️ تم حذف القسم بنجاح!</div>
+<?php endif; ?>
+
+<style>
+.toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 9999;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    animation: fadeInOut 3.5s forwards;
+}
+.toast-success { background: #22c55e; }
+.toast-error   { background: #ef4444; }
+@keyframes fadeInOut {
+    0%   { opacity: 0; top: 10px; }
+    10%  { opacity: 1; top: 24px; }
+    80%  { opacity: 1; top: 24px; }
+    100% { opacity: 0; top: 10px; }
+}
+.btn-loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+</style>
+
 <!-- نموذج إضافة/تعديل قسم (مخفي افتراضياً ويظهر بالجافاسكريبت) -->
 <div id="categoryForm" class="card" style="display:none; margin-bottom: 2rem;">
     <h2 id="formTitle">إضافة قسم جديد</h2>
@@ -129,7 +168,7 @@ include __DIR__ . '/includes/header.php';
             <label>الصورة</label>
             <input type="file" name="image">
         </div>
-        <button type="submit" class="btn btn-primary">حفظ القسم</button>
+        <button type="submit" id="submitBtn" class="btn btn-primary" onclick="showLoading(this)">حفظ القسم</button>
         <button type="button" onclick="hideForm()" class="btn btn-danger">إلغاء</button>
     </form>
 </div>
@@ -168,7 +207,7 @@ include __DIR__ . '/includes/header.php';
                     <!-- زر التعديل يقوم بتمرير بيانات القسم لدالة جافاسكريبت لتعبئة النموذج -->
                     <button onclick='showEditForm(<?php echo json_encode($cat); ?>)' class="btn btn-primary" style="background: #ffa500; border-color: #ffa500; margin-left: 5px;">تعديل</button>
                     <!-- رابط الحذف مع رسالة تأكيد لحماية البيانات من الحذف السهو -->
-                    <a href="categories.php?delete=<?php echo $cat['id']; ?>" class="btn btn-danger" onclick="return confirm('هل أنت متأكد؟')">حذف</a>
+                    <a href="categories.php?delete=<?php echo $cat['id']; ?>" class="btn btn-danger" onclick="return confirmDelete(this)">حذف</a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -177,28 +216,26 @@ include __DIR__ . '/includes/header.php';
 </div>
 
 <script>
-// دالة لتجهيز النموذج لعملية الإضافة الجديدة (تفريغ الحقول)
-function showAddForm() {
-    document.getElementById('formTitle').innerText = 'إضافة قسم جديد';
-    document.getElementById('catId').value = '';
-    document.getElementById('catName').value = '';
-    document.getElementById('existingImage').value = '';
-    document.getElementById('categoryForm').style.display = 'block';
+// إظهار حالة التحميل عند الإرسال
+function showLoading(btn) {
+    setTimeout(function() {
+        btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none"/><path d="M12 2a10 10 0 0 1 10 10" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/></svg>جاري الحفظ...</span>';
+        btn.classList.add('btn-loading');
+    }, 10);
+    return true;
 }
 
-// دالة لتجهيز النموذج لعملية التعديل (تعبئة الحقول بالبيانات الحالية)
-function showEditForm(cat) {
-    document.getElementById('formTitle').innerText = 'تعديل قسم';
-    document.getElementById('catId').value = cat.id;
-    document.getElementById('catName').value = cat.name;
-    document.getElementById('existingImage').value = cat.image || '';
-    document.getElementById('categoryForm').style.display = 'block';
-}
-
-// دالة لإخفاء النموذج وتعديل الواجهة
-function hideForm() {
-    document.getElementById('categoryForm').style.display = 'none';
+// تأكيد الحذف مع إظهار رسالة تحميل
+function confirmDelete(link) {
+    if (!confirm('هل أنت متأكد من حذف هذا القسم؟')) return false;
+    link.innerHTML = 'جاري الحذف...';
+    link.classList.add('btn-loading');
+    return true;
 }
 </script>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

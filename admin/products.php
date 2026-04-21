@@ -114,6 +114,41 @@ include __DIR__ . '/includes/header.php';
     <button onclick="showAddForm()" class="btn btn-primary">إضافة منتج جديد</button>
 </div>
 
+<!-- رسائل النجاح (Toast Notifications) -->
+<?php if(isset($_GET['added'])): ?>
+<div id="toast" class="toast toast-success">✅ تم إضافة المنتج بنجاح!</div>
+<?php elseif(isset($_GET['updated'])): ?>
+<div id="toast" class="toast toast-success">✅ تم تعديل المنتج بنجاح!</div>
+<?php elseif(isset($_GET['deleted'])): ?>
+<div id="toast" class="toast toast-success">🗑️ تم حذف المنتج بنجاح!</div>
+<?php endif; ?>
+
+<style>
+.toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 9999;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    animation: fadeInOut 3.5s forwards;
+}
+.toast-success { background: #22c55e; }
+@keyframes fadeInOut {
+    0%   { opacity: 0; top: 10px; }
+    10%  { opacity: 1; top: 24px; }
+    80%  { opacity: 1; top: 24px; }
+    100% { opacity: 0; top: 10px; }
+}
+.btn-loading { opacity: 0.7; cursor: not-allowed; pointer-events: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
 <!-- نموذج إضافة/تعديل منتج (يظهر عند الطلب) -->
 <div id="productForm" class="card" style="display:none; margin-bottom: 2rem;">
     <h2 id="formTitle">إضافة منتج جديد</h2>
@@ -165,7 +200,7 @@ include __DIR__ . '/includes/header.php';
                 <input type="checkbox" name="is_featured" id="prodFeatured"> منتج مميز
             </label>
         </div>
-        <button type="submit" class="btn btn-primary">حفظ المنتج</button>
+        <button type="submit" class="btn btn-primary" onclick="showLoading(this)">حفظ المنتج</button>
         <button type="button" onclick="hideForm()" class="btn btn-danger">إلغاء</button>
     </form>
 </div>
@@ -213,7 +248,7 @@ include __DIR__ . '/includes/header.php';
                 <td>
                     <!-- استدعاء دالة التعديل وتمرير بيانات المنتج كاملاً بصيغة JSON -->
                     <button onclick='showEditForm(<?php echo json_encode($product); ?>)' class="btn btn-primary" style="background: #ffa500; border-color: #ffa500; margin-left: 5px;">تعديل</button>
-                    <a href="products.php?delete=<?php echo $product['id']; ?>" class="btn btn-danger" onclick="return confirm('هل أنت متأكد؟')">حذف</a>
+                    <a href="products.php?delete=<?php echo $product['id']; ?>" class="btn btn-danger" onclick="return confirmDelete(this)">حذف</a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -255,6 +290,23 @@ function showEditForm(prod) {
 // دالة لإخفاء النموذج
 function hideForm() {
     document.getElementById('productForm').style.display = 'none';
+}
+
+// إظهار حالة التحميل عند الإرسال
+function showLoading(btn) {
+    setTimeout(function() {
+        btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none"/><path d="M12 2a10 10 0 0 1 10 10" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/></svg>جاري الحفظ...</span>';
+        btn.classList.add('btn-loading');
+    }, 10);
+    return true;
+}
+
+// تأكيد الحذف
+function confirmDelete(link) {
+    if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return false;
+    link.innerHTML = 'جاري الحذف...';
+    link.classList.add('btn-loading');
+    return true;
 }
 </script>
 
