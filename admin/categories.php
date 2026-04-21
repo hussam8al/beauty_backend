@@ -205,7 +205,8 @@ include __DIR__ . '/includes/header.php';
                 <td><?php echo htmlspecialchars($cat['name']); ?></td>
                 <td>
                     <!-- زر التعديل يقوم بتمرير بيانات القسم لدالة جافاسكريبت لتعبئة النموذج -->
-                    <button onclick='showEditForm(<?php echo json_encode($cat); ?>)' class="btn btn-primary" style="background: #ffa500; border-color: #ffa500; margin-left: 5px;">تعديل</button>
+                    <!-- نستخدم ENT_QUOTES لضمان عدم كسر الكود إذا احتوى الاسم على علامات تنصيص -->
+                    <button onclick='showEditForm(<?php echo htmlspecialchars(json_encode($cat), ENT_QUOTES, "UTF-8"); ?>)' class="btn btn-primary" style="background: #ffa500; border-color: #ffa500; margin-left: 5px;">تعديل</button>
                     <!-- رابط الحذف مع رسالة تأكيد لحماية البيانات من الحذف السهو -->
                     <a href="categories.php?delete=<?php echo $cat['id']; ?>" class="btn btn-danger" onclick="return confirmDelete(this)">حذف</a>
                 </td>
@@ -216,6 +217,33 @@ include __DIR__ . '/includes/header.php';
 </div>
 
 <script>
+// إظهار نموذج الإضافة
+function showAddForm() {
+    document.getElementById('categoryForm').style.display = 'block';
+    document.getElementById('formTitle').innerText = 'إضافة قسم جديد';
+    document.getElementById('catId').value = '';
+    document.getElementById('catName').value = '';
+    document.getElementById('existingImage').value = '';
+    document.getElementById('submitBtn').innerText = 'حفظ القسم';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// إظهار نموذج التعديل مع تعبئة البيانات
+function showEditForm(cat) {
+    document.getElementById('categoryForm').style.display = 'block';
+    document.getElementById('formTitle').innerText = 'تعديل قسم: ' + cat.name;
+    document.getElementById('catId').value = cat.id;
+    document.getElementById('catName').value = cat.name;
+    document.getElementById('existingImage').value = cat.image || '';
+    document.getElementById('submitBtn').innerText = 'حفظ التعديلات';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// إخفاء النموذج
+function hideForm() {
+    document.getElementById('categoryForm').style.display = 'none';
+}
+
 // إظهار حالة التحميل عند الإرسال
 function showLoading(btn) {
     setTimeout(function() {
