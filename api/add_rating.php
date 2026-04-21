@@ -36,11 +36,11 @@ try {
         exit;
     }
 
-    // 2. استخدام خاصية ON DUPLICATE KEY UPDATE لحفظ التقييم
-    // إذا كان المستخدم قد قيم المنتج سابقاً، يتم تحديث تقييمه، وإلا يتم إنشاء تقييم جديد
+    // 2. إضافة أو تحديث التقييم (صيغة PostgreSQL)
+    // إذا قيّم المستخدم مسبقاً يتم تحديث تقييمه، وإلا يتم إنشاء تقييم جديد
     $stmt = $pdo->prepare("INSERT INTO ratings (user_id, product_id, rating, comment) 
                            VALUES (?, ?, ?, ?) 
-                           ON DUPLICATE KEY UPDATE rating = VALUES(rating), comment = VALUES(comment)");
+                           ON CONFLICT (user_id, product_id) DO UPDATE SET rating = EXCLUDED.rating, comment = EXCLUDED.comment");
     $stmt->execute([$user_id, $product_id, $rating, $comment]);
 
     echo json_encode(['status' => 'success', 'message' => 'Rating submitted successfully']);
