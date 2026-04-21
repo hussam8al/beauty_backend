@@ -12,6 +12,10 @@
         {
             "src": "includes/**/*.php",
             "use": "vercel-php@0.9.0"
+        },
+        {
+            "src": "admin/css/**/*.css",
+            "use": "@vercel/static"
         }
     ],
     "routes": [
